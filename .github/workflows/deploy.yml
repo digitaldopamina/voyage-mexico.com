@@ -18,7 +18,7 @@ jobs:
         with:
           server: ftp.voyage-mexico.com
           username: u165470353.voyage-mexico.com
-          password: ${{ secrets.FTP_PASSWORDVOYAGEMEXICO }}
+          password: ${{ secrets.FTP_PASSWORD }}
           server-dir: /public_html/
           protocol: ftp
           port: 21
