@@ -13,6 +13,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Test FTP connection
+        env:
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          echo "Testing FTP connection..."
+          echo "Password length: ${#FTP_PASSWORD}"
+          curl -v --user "u165470353.voyage-mexico.com:$FTP_PASSWORD" ftp://195.35.15.46/ 2>&1 | head -40
+
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -20,7 +28,7 @@ jobs:
           username: u165470353.voyage-mexico.com
           password: ${{ secrets.FTP_PASSWORD }}
           server-dir: /public_html/
-          protocol: ftps
+          protocol: ftp
           port: 21
           exclude: |
             **/.git*
