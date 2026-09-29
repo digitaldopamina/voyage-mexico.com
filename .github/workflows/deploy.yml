@@ -12,15 +12,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Install lftp
+        run: sudo apt-get install -y lftp
+
       - name: Deploy via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: voyage-mexico.com
-          username: u165470353.voyage-mexico.com
-          password: ${{ secrets.FTP_PASSWORDVOYAGEMEXICO }}
-          server-dir: /public_html/
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            .github/**
+        env:
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORDVOYAGEMEXICO }}
+        run: |
+          lftp -c "
+            set ftp:ssl-allow no;
+            open -u u165470353.voyage-mexico.com,$FTP_PASSWORD ftp://voyage-mexico.com;
+            mirror --reverse --delete --verbose \
+              --exclude .git \
+              --exclude .github \
+              --exclude .gitignore \
+              . /public_html/
+          "
