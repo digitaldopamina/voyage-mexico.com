@@ -8,23 +8,22 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install lftp
-        run: sudo apt-get install -y lftp
-
       - name: Deploy via FTP
-        env:
-          FTP_PASSWORD: ${{ secrets.FTP_PASSWORDVOYAGEMEXICO }}
-        run: |
-          lftp -c "
-            set ftp:ssl-allow no;
-            open -u u165470353.voyage-mexico.com,$FTP_PASSWORD ftp://voyage-mexico.com;
-            mirror --reverse --delete --verbose \
-              --exclude .git \
-              --exclude .github \
-              --exclude .gitignore \
-              . /public_html/
-          "
+        uses: SamKirkland/FTP-Deploy-Action@v4
+        with:
+          server: ftp.voyage-mexico.com
+          username: u165470353.voyage-mexico.com
+          password: ${{ secrets.FTP_PASSWORDVOYAGEMEXICO }}
+          server-dir: /public_html/
+          protocol: ftp
+          port: 21
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            .github/**
