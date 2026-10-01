@@ -96,6 +96,28 @@
     navToggle.addEventListener('click', () => { navMenu.classList.toggle('hidden'); });
   </script>
 </nav>
+  <script>
+    // Language switcher: redirect to the same page in the selected language
+    (function() {
+      var langMap = {};
+      document.querySelectorAll('link[rel="alternate"][hreflang]').forEach(function(link) {
+        var hl = link.getAttribute('hreflang');
+        if (hl && hl !== 'x-default') langMap[hl] = link.getAttribute('href');
+      });
+      // Desktop nav flags
+      document.querySelectorAll('a[aria-label="Français"]').forEach(function(a) { if (langMap['fr']) a.href = langMap['fr']; });
+      document.querySelectorAll('a[aria-label="English"]').forEach(function(a) { if (langMap['en']) a.href = langMap['en']; });
+      document.querySelectorAll('a[aria-label="Español"]').forEach(function(a) { if (langMap['es']) a.href = langMap['es']; });
+      // Mobile nav flags (identified by their text-xs span)
+      document.querySelectorAll('#navMenu a').forEach(function(a) {
+        var label = a.querySelector('.text-xs');
+        if (!label) return;
+        var codes = {'FR':'fr','EN':'en','ES':'es'};
+        var lang = codes[label.textContent.trim()];
+        if (lang && langMap[lang]) a.href = langMap[lang];
+      });
+    })();
+  </script>
 
 <main class="flex flex-col items-center justify-center px-4 py-20 min-h-[70vh]">
   <div class="max-w-lg w-full text-center">

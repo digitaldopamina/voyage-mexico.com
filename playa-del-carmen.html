@@ -183,6 +183,26 @@
     });
   </script>
 </nav>
+  <script>
+    // Language switcher — uses hreflang links to redirect to the same page in the selected language
+    (function() {
+      var langMap = {};
+      document.querySelectorAll('link[rel="alternate"][hreflang]').forEach(function(link) {
+        var hl = link.getAttribute('hreflang');
+        if (hl && hl !== 'x-default') langMap[hl] = link.getAttribute('href');
+      });
+      document.querySelectorAll('a[aria-label="Français"]').forEach(function(a) { if (langMap['fr']) a.href = langMap['fr']; });
+      document.querySelectorAll('a[aria-label="English"]').forEach(function(a) { if (langMap['en']) a.href = langMap['en']; });
+      document.querySelectorAll('a[aria-label="Español"]').forEach(function(a) { if (langMap['es']) a.href = langMap['es']; });
+      document.querySelectorAll('#navMenu a').forEach(function(a) {
+        var label = a.querySelector('.text-xs');
+        if (!label) return;
+        var codes = {'FR':'fr','EN':'en','ES':'es'};
+        var lang = codes[label.textContent.trim()];
+        if (lang && langMap[lang]) a.href = langMap[lang];
+      });
+    })();
+  </script>
 
 <!-- Meta tags requested (placed at top of body due to no head tag rule) -->
 <title>Playa del Carmen : culture, shopping et plongée sous-marine | Voyage Mexico</title>
